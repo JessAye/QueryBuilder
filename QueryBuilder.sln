@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryBuilder", "QueryBuilder\QueryBuilder.csproj", "{FFAE1536-D129-46A6-A061-11D0B155A064}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFAE1536-D129-46A6-A061-11D0B155A064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFAE1536-D129-46A6-A061-11D0B155A064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFAE1536-D129-46A6-A061-11D0B155A064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFAE1536-D129-46A6-A061-11D0B155A064}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
