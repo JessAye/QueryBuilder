@@ -139,6 +139,29 @@ public class Querybuilder
             cmd.ExecuteNonQuery();
         }
 
+        public void Update<T>()
+        {
+            Type type = typeof(T);
+            String[] stringSplitter = type.ToString().Split(".");
+            connection.Open();
+            Console.WriteLine("What is the ID of the item you'd like to update?");
+            string updateID = Console.ReadLine();
+            if (stringSplitter[1]=="Author")
+            {
+                Console.WriteLine("Please Enter the new information");
+                Console.WriteLine("New ID: ");
+                string newID = Console.ReadLine();
+                Console.WriteLine("new first name: ");
+                string newFirstName = Console.ReadLine();
+                Console.WriteLine("New SurName: ");
+                string newSurName = Console.ReadLine();
+                SqliteCommand cmd = new SqliteCommand($"Update {stringSplitter[1]} set id = '{newID}', firstname = '{newFirstName}',surname='{newSurName}' where id = '{updateID}'", connection);
+                cmd.ExecuteNonQuery();
+                
+            }
+           
+        }
+
 
         /// <summary>
         /// By implementing IDisposable, we have the capability to 
