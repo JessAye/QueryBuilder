@@ -1,6 +1,4 @@
-﻿
-
-namespace QueryBuilder;
+﻿namespace QueryBuilder;
 
 // We need this so ADO.NET can interact w SQLite
 using Microsoft.Data.Sqlite;
@@ -24,13 +22,13 @@ public class Querybuilder
         {
             _connection.Open();
         }
-        
+
         //No idea how youre suppose to return a generic list????? 
-        public void ReadAll<T>() 
+        public void ReadAll<T>()
         {
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
-            
+
             _connection.Open();
             SqliteCommand cmd = new SqliteCommand($"Select * from {stringSplitter[1]}", _connection);
             var coloumnNames = cmd.ExecuteReader();
@@ -57,11 +55,10 @@ public class Querybuilder
                     objectList.Add(new Author($"{reader.GetString(0)}", $"{reader.GetString(1)}",
                         $"{reader.GetString(2)}"));
                     Console.WriteLine(objectList[^1]);
-                 
                 }
             }
-            
-        } 
+        }
+
         //not sure how you're supposed to return a generic object????
         public void Read<T>(int index)
         {
@@ -95,10 +92,7 @@ public class Querybuilder
                     Console.WriteLine(objectList[index]);
                     break;
                 }
-            
             }
-
-            
         }
 
         public void Create<T>()
@@ -119,7 +113,10 @@ public class Querybuilder
 
                 try
                 {
-                    SqliteCommand cmd = new SqliteCommand($"Insert into {stringSplitter[1]} (id, firstname, surname) VALUES ('{id}','{firstName}','{surName}')", _connection);
+                    SqliteCommand cmd =
+                        new SqliteCommand(
+                            $"Insert into {stringSplitter[1]} (id, firstname, surname) VALUES ('{id}','{firstName}','{surName}')",
+                            _connection);
                     cmd.ExecuteNonQuery();
                 }
                 catch (Exception e)
@@ -127,10 +124,7 @@ public class Querybuilder
                     Console.WriteLine("Error adding item to database");
                     throw;
                 }
-                
             }
-            
-            
         }
 
         public void Delete<T>()
@@ -138,13 +132,14 @@ public class Querybuilder
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
             _connection.Open();
-          
-         
+
+
             Console.WriteLine($"Enter the ID of the the item you want to delete: ");
             string deleteID = Convert.ToString(Convert.ToInt32(Console.ReadLine().ToString()));
             try
             {
-                SqliteCommand cmd = new SqliteCommand($"Delete from {stringSplitter[1]} where ID = {deleteID}", _connection);
+                SqliteCommand cmd = new SqliteCommand($"Delete from {stringSplitter[1]} where ID = {deleteID}",
+                    _connection);
                 cmd.ExecuteNonQuery();
             }
             catch (Exception e)
@@ -152,7 +147,6 @@ public class Querybuilder
                 Console.WriteLine("Error cannot find item with that ID");
                 throw;
             }
-            
         }
 
         public void Update<T>()
@@ -162,7 +156,7 @@ public class Querybuilder
             _connection.Open();
             Console.WriteLine("What is the ID of the item you'd like to update?");
             string updateID = Console.ReadLine();
-            if (stringSplitter[1]=="Author")
+            if (stringSplitter[1] == "Author")
             {
                 Console.WriteLine("Please Enter the new information");
                 Console.WriteLine("New ID: ");
@@ -173,18 +167,18 @@ public class Querybuilder
                 string newSurName = Console.ReadLine();
                 try
                 {
-                SqliteCommand cmd = new SqliteCommand($"Update {stringSplitter[1]} set id = '{newID}', firstname = '{newFirstName}',surname='{newSurName}' where id = '{updateID}'", _connection);
-                cmd.ExecuteNonQuery();
+                    SqliteCommand cmd =
+                        new SqliteCommand(
+                            $"Update {stringSplitter[1]} set id = '{newID}', firstname = '{newFirstName}',surname='{newSurName}' where id = '{updateID}'",
+                            _connection);
+                    cmd.ExecuteNonQuery();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Error Updating item with that ID");
                     throw;
                 }
-                
-                
             }
-           
         }
 
 
@@ -208,8 +202,7 @@ public interface IClassModel
 
 public class T : IClassModel
 {
-    public string id
-    { get; set;}
+    public string id { get; set; }
 }
 
 public class Author : T
@@ -229,7 +222,4 @@ public class Author : T
     {
         return $"{id} {FirstName} {SurName}";
     }
-    
-
-    
 }

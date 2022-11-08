@@ -1,5 +1,4 @@
-﻿
-using QueryBuilder;
+﻿using QueryBuilder;
 using Microsoft.Data.Sqlite;
 
 
@@ -14,7 +13,8 @@ while (!done)
     if (File.Exists(path))
     {
         Querybuilder.QueryBuilder QB = new Querybuilder.QueryBuilder();
-        Console.WriteLine("What would you like to do?\n1: create new Database item\n2: Read a database row\n3: read all entries in a table\n4: update an entry\n5: delete row in table\n6: exit");
+        Console.WriteLine(
+            "What would you like to do?\n1: create new Database item\n2: Read a database row\n3: read all entries in a table\n4: update an entry\n5: delete row in table\n6: exit");
         string choice;
         choice = Console.ReadLine().ToString();
         switch (choice)
