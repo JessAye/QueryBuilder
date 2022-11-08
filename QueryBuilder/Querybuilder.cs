@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿
 
 namespace QueryBuilder;
 
@@ -12,7 +11,7 @@ public class Querybuilder
     {
         // db connection referenced by the 'connection' field
 
-        private SqliteConnection connection = new SqliteConnection(
+        private readonly SqliteConnection _connection = new SqliteConnection(
             "Data Source=" +
             @$"{Path.Combine(Directory.GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString(), @"Data\", "Lab5.db")}");
 
@@ -23,7 +22,7 @@ public class Querybuilder
         /// <param name="databaseLocation">File path to a .db file</param>
         public QueryBuilder()
         {
-            connection.Open();
+            _connection.Open();
         }
         
         //No idea how youre suppose to return a generic list????? 
@@ -32,8 +31,8 @@ public class Querybuilder
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
             
-            connection.Open();
-            SqliteCommand cmd = new SqliteCommand($"Select * from {stringSplitter[1]}", connection);
+            _connection.Open();
+            SqliteCommand cmd = new SqliteCommand($"Select * from {stringSplitter[1]}", _connection);
             var coloumnNames = cmd.ExecuteReader();
             List<string> coloumnNameList = new List<string>();
             for (var i = 0; i < coloumnNames.FieldCount; i++)
@@ -68,8 +67,8 @@ public class Querybuilder
         {
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
-            connection.Open();
-            SqliteCommand cmd = new SqliteCommand($"Select * from {stringSplitter[1]}", connection);
+            _connection.Open();
+            SqliteCommand cmd = new SqliteCommand($"Select * from {stringSplitter[1]}", _connection);
             var coloumnNames = cmd.ExecuteReader();
             List<string> coloumnNameList = new List<string>();
             for (var i = 0; i < coloumnNames.FieldCount; i++)
@@ -106,7 +105,7 @@ public class Querybuilder
         {
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
-            connection.Open();
+            _connection.Open();
             if (stringSplitter[1] == "author") ;
             {
                 Console.WriteLine("\nTable: Author");
@@ -117,9 +116,18 @@ public class Querybuilder
                 string firstName = Console.ReadLine();
                 Console.WriteLine("SurName");
                 string surName = Console.ReadLine();
+
+                try
+                {
+                    SqliteCommand cmd = new SqliteCommand($"Insert into {stringSplitter[1]} (id, firstname, surname) VALUES ('{id}','{firstName}','{surName}')", _connection);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error adding item to database");
+                    throw;
+                }
                 
-                SqliteCommand cmd = new SqliteCommand($"Insert into {stringSplitter[1]} (id, firstname, surname) VALUES ('{id}','{firstName}','{surName}')", connection);
-                cmd.ExecuteNonQuery();
             }
             
             
@@ -129,21 +137,29 @@ public class Querybuilder
         {
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
-            Console.WriteLine(type.ToString().Split("."));
-            connection.Open();
+            _connection.Open();
           
          
             Console.WriteLine($"Enter the ID of the the item you want to delete: ");
             string deleteID = Convert.ToString(Convert.ToInt32(Console.ReadLine().ToString()));
-            SqliteCommand cmd = new SqliteCommand($"Delete from {stringSplitter[1]} where ID = {deleteID}", connection);
-            cmd.ExecuteNonQuery();
+            try
+            {
+                SqliteCommand cmd = new SqliteCommand($"Delete from {stringSplitter[1]} where ID = {deleteID}", _connection);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error cannot find item with that ID");
+                throw;
+            }
+            
         }
 
         public void Update<T>()
         {
             Type type = typeof(T);
             String[] stringSplitter = type.ToString().Split(".");
-            connection.Open();
+            _connection.Open();
             Console.WriteLine("What is the ID of the item you'd like to update?");
             string updateID = Console.ReadLine();
             if (stringSplitter[1]=="Author")
@@ -155,8 +171,17 @@ public class Querybuilder
                 string newFirstName = Console.ReadLine();
                 Console.WriteLine("New SurName: ");
                 string newSurName = Console.ReadLine();
-                SqliteCommand cmd = new SqliteCommand($"Update {stringSplitter[1]} set id = '{newID}', firstname = '{newFirstName}',surname='{newSurName}' where id = '{updateID}'", connection);
+                try
+                {
+                SqliteCommand cmd = new SqliteCommand($"Update {stringSplitter[1]} set id = '{newID}', firstname = '{newFirstName}',surname='{newSurName}' where id = '{updateID}'", _connection);
                 cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error Updating item with that ID");
+                    throw;
+                }
+                
                 
             }
            
@@ -171,7 +196,7 @@ public class Querybuilder
         /// </summary>
         public void Dispose()
         {
-            connection.Dispose();
+            _connection.Dispose();
         }
     }
 }
