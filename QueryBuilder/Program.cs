@@ -1,22 +1,26 @@
-﻿using QueryBuilder;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
+using QueryBuilder;
 
-
-string file = Directory
+var file = Directory
     .GetParent(Directory.GetParent(Directory.GetParent(Environment.CurrentDirectory).ToString()).ToString()).ToString();
-string path = Path.Combine(file, @"Data\", "Lab5.db");
+var path = Path.Combine(file, @"Data\", "Lab5.db");
 Console.Write("PATH: " + path + "\n");
-SqliteConnection connection = new SqliteConnection("Data Source=" + @$"{path}");
-bool done = false;
+var connection = new SqliteConnection("Data Source=" + @$"{path}");
+var done = false;
 while (!done)
-{
     if (File.Exists(path))
     {
-        Querybuilder.QueryBuilder QB = new Querybuilder.QueryBuilder();
+        var QB = new Querybuilder.QueryBuilder();
         Console.WriteLine(
-            "What would you like to do?\n1: create new Database item\n2: Read a database row\n3: read all entries in a table\n4: update an entry\n5: delete row in table\n6: exit");
+            "What would you like to do?\n" +
+            "1: create new Database item\n" +
+            "2: Read a database row\n" +
+            "3: read all entries in a table\n" +
+            "4: update an entry\n" +
+            "5: delete row in table\n" +
+            "6: exit");
         string choice;
-        choice = Console.ReadLine().ToString();
+        choice = Console.ReadLine();
         switch (choice)
         {
             case "1":
@@ -25,10 +29,10 @@ while (!done)
                 break;
             case "2":
                 //Read
-                Console.WriteLine($"enter index number starting at 0");
+                Console.WriteLine("enter index number starting at 0");
                 try
                 {
-                    int index = Convert.ToInt32(Console.ReadLine());
+                    var index = Convert.ToInt32(Console.ReadLine());
                     QB.Read<Author>(index);
                 }
                 catch (Exception e)
@@ -40,6 +44,7 @@ while (!done)
                 break;
             case "3":
                 QB.ReadAll<Author>();
+                Thread.Sleep(1000);
                 break;
             case "4":
                 //update
@@ -51,7 +56,7 @@ while (!done)
                 break;
             case "6":
                 QB.Dispose();
-                System.Environment.Exit(1);
+                Environment.Exit(1);
                 break;
             default:
                 Console.WriteLine("Please inter a valid Int 1-6");
@@ -63,4 +68,3 @@ while (!done)
     {
         Console.WriteLine("File does not Exist");
     }
-}
