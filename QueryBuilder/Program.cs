@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Reflection;
 using QueryBuilder;
 using Microsoft.Data.Sqlite;
@@ -9,28 +10,83 @@ using Microsoft.Data.Sqlite;
     string path = Path.Combine(file, @"Data\", "Lab5.db");
     Console.Write("PATH: "+ path);
     SqliteConnection connection = new SqliteConnection("Data Source=" + @$"{path}");
-    if (File.Exists(path))
+    bool done = false;
+    while (!done)
     {
-        Querybuilder.QueryBuilder test = new Querybuilder.QueryBuilder(path);
-        
-        //Create
-        
-        //Read
-        test.ReadAll<Author>(connection);
-        test.Dispose();
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-    else
-    {
-        Console.WriteLine("File does not Exist");
+
+
+        if (File.Exists(path))
+        {
+            Querybuilder.QueryBuilder test = new Querybuilder.QueryBuilder();
+            string choice;
+            choice = Console.ReadLine().ToString();
+            switch (choice)
+            {
+                case "1" :
+                    //Create
+                    test.Create<Author>();
+                    break;
+                    case "2":
+                        //update
+                        break;
+                        case "3":
+                            Console.WriteLine($"enter index number starting at 0");
+                            try
+                            {
+                                int index = Convert.ToInt32(Console.ReadLine());
+                                test.Read<Author>(index);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Not a valid index number");
+                                throw;
+                            }
+                            break;
+                            case "4":
+                                test.ReadAll<Author>();
+                                break;
+
+
+
+
+
+
+                                //delete
+                    test.Delete<Author>();
+                    //Create
+                    test.Create<Author>();
+                    //Read
+                  
+                    Console.WriteLine($"enter index number starting at 0");
+                    try
+                    {
+                        int index = Convert.ToInt32(Console.ReadLine());
+                        test.Read<Author>(index);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Not a valid index number");
+                        throw;
+                    }
+
+                    test.Dispose();
+
+
+
+
+
+
+
+
+
+            }
+        }
+
+        else
+            {
+                Console.WriteLine("File does not Exist");
+            }
+        }
     }
     
 
